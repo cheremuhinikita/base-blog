@@ -45,7 +45,7 @@ export class PostsService {
 		return this.postsRepository.save(updatedPost);
 	}
 
-	async remove(post: Post): Promise<void> {
-		await this.postsRepository.remove(post);
+	remove(post: Post): Promise<Post> {
+		return this.postsRepository.remove(post);
 	}
 }

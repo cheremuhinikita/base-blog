@@ -41,7 +41,7 @@ export class AuthorsService {
 		return this.authorsRepository.save(updatedAuthor);
 	}
 
-	async remove(author: Author): Promise<void> {
-		await this.authorsRepository.remove(author);
+	remove(author: Author): Promise<Author> {
+		return this.authorsRepository.remove(author);
 	}
 }

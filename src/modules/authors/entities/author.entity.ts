@@ -16,10 +16,10 @@ export class Author extends BaseEntity implements IAuthor {
 	email: string;
 
 	@Column({ nullable: true })
-	address: string;
+	address?: string;
 
 	@Column({ nullable: true })
-	website: string;
+	website?: string;
 
 	@OneToMany(() => Post, (post) => post.author)
 	posts: Post[];

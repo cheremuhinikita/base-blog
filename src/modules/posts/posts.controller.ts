@@ -1,16 +1,15 @@
 import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
-import {
-	ApiBadRequestResponse,
-	ApiCreatedResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-	ApiParam,
-	ApiTags,
-} from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiTags } from '@nestjs/swagger';
 
-import { AuthorsService } from 'src/modules/authors/authors.service';
+import {
+	ApiCreate,
+	ApiDelete,
+	ApiFindAll,
+	ApiFindOne,
+	ApiUpdate,
+} from 'src/common/decorators/swagger.decorators';
 import { ParamsDto } from 'src/common/dto/params.dto';
+import { AuthorsService } from 'src/modules/authors/authors.service';
 import { PostsService } from './posts.service';
 import { Post as PostEntity } from './entities/post.entity';
 import { CreateOrUpdatePostDto } from './dto/create-or-update-post.dto';
@@ -24,15 +23,9 @@ export class PostsController {
 	) {}
 
 	@Post()
-	@ApiOperation({ summary: 'Create post' })
-	@ApiBadRequestResponse({
-		description: 'Invalid request body.',
-	})
+	@ApiCreate('post', PostEntity)
 	@ApiNotFoundResponse({
 		description: 'Author by id does not exists.',
-	})
-	@ApiCreatedResponse({
-		description: 'The post has been successfully created.',
 	})
 	async create(
 		@Body() { authorId, ...createPostDto }: CreateOrUpdatePostDto,
@@ -43,42 +36,19 @@ export class PostsController {
 	}
 
 	@Get()
-	@ApiOperation({ summary: 'Find all posts' })
-	@ApiOkResponse({
-		description: 'Found all posts.',
-	})
+	@ApiFindAll('post', [PostEntity])
 	findAll(): Promise<PostEntity[]> {
 		return this.postsService.findAll();
 	}
 
 	@Get(':id')
-	@ApiOperation({ summary: 'Find post by id' })
-	@ApiParam({ type: 'number', name: 'id' })
-	@ApiBadRequestResponse({
-		description: 'Invalid id param.',
-	})
-	@ApiNotFoundResponse({
-		description: 'Post by id does not exists.',
-	})
-	@ApiOkResponse({
-		description: 'Found post.',
-	})
+	@ApiFindOne('post', PostEntity)
 	findOne(@Param() { id }: ParamsDto): Promise<PostEntity> {
 		return this.postsService.findOne(id, true);
 	}
 
 	@Put(':id')
-	@ApiOperation({ summary: 'Update post by id' })
-	@ApiParam({ type: 'number', name: 'id' })
-	@ApiBadRequestResponse({
-		description: 'Invalid id param or request body.',
-	})
-	@ApiNotFoundResponse({
-		description: 'Author or post by id does not exists.',
-	})
-	@ApiOkResponse({
-		description: 'The post has been successfully updated.',
-	})
+	@ApiUpdate('post', PostEntity, ['author'])
 	async update(
 		@Param() { id }: ParamsDto,
 		@Body() { authorId, ...updatePostDto }: CreateOrUpdatePostDto,
@@ -90,18 +60,8 @@ export class PostsController {
 	}
 
 	@Delete(':id')
-	@ApiOperation({ summary: 'Delete post by id' })
-	@ApiParam({ type: 'number', name: 'id' })
-	@ApiBadRequestResponse({
-		description: 'Invalid id param.',
-	})
-	@ApiNotFoundResponse({
-		description: 'Post by id does not exists.',
-	})
-	@ApiOkResponse({
-		description: 'The author has been successfully deleted.',
-	})
-	async remove(@Param() { id }: ParamsDto): Promise<void> {
+	@ApiDelete('post', PostEntity)
+	async remove(@Param() { id }: ParamsDto): Promise<PostEntity> {
 		const existPost = await this.postsService.findOne(id);
 
 		return this.postsService.remove(existPost);
