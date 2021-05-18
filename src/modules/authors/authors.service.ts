@@ -27,6 +27,7 @@ export class AuthorsService {
 			id,
 			withRelations ? { relations: ['posts'] } : undefined,
 		);
+
 		if (!author) {
 			throw new NotFoundException(`Author by id #${id} does not exists`);
 		}
