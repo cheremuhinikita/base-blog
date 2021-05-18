@@ -10,7 +10,6 @@ async function bootstrap() {
 
 	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-	const logger = new Logger();
 	const configEnv = app.get(ConfigService);
 
 	const port = +configEnv.get('API_PORT') || 3000;
@@ -20,8 +19,8 @@ async function bootstrap() {
 	SwaggerModule.setup('api', app, document);
 
 	await app.listen(port);
-	logger.log(`Server is running on port ${port}`, 'Boostrap');
-	logger.log(`Swagger at http://localhost:${port}/api`, 'Swagger');
+	Logger.log(`Server is running on port ${port}`, 'Boostrap');
+	Logger.log(`Swagger at http://localhost:${port}/api`, 'Swagger');
 }
 
 bootstrap();

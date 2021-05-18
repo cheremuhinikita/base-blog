@@ -4,7 +4,7 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 import { Post } from 'src/modules/posts/entities/post.entity';
 import { IAuthor } from '../interfaces/author.interface';
 
-@Entity()
+@Entity('authors')
 export class Author extends BaseEntity implements IAuthor {
 	@Column()
 	name: string;
