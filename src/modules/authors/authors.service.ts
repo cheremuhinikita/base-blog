@@ -23,11 +23,10 @@ export class AuthorsService {
 	}
 
 	async findOne(id: number, withRelations = false): Promise<Author> {
-		const author = await this.authorsRepository
-			.createQueryBuilder('author')
-			.where('authors.id = :id', { id })
-			.getOne();
-
+		const author = await this.authorsRepository.findOne(
+			id,
+			withRelations ? { relations: ['posts'] } : undefined,
+		);
 		if (!author) {
 			throw new NotFoundException(`Author by id #${id} does not exists`);
 		}
